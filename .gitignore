@@ -1,0 +1,21 @@
+```
+# Xcode
+*.xcodeproj/
+*.xcworkspace/
+*.pbxuser
+*.mode1v3
+*.perspectivev3
+*.xcuserstate
+*.xcuserdata
+DerivedData/
+
+# Build
+build/
+*.app
+*.ipa
+*.dSYM
+
+# Dependencies
+Pods/
+Carthage/
+```
