@@ -1,29 +1,21 @@
 ```
-# Flutter/Dart specific
-.dart_tool/
-.build/
-*.g.dart
-*.freezed.dart
+# Xcode
+*.xcodeproj/
+*.xcworkspace/
+*.pbxuser
+*.mode1v3
+*.perspectivev3
+*.xcuserstate
+*.xcuserdata
+DerivedData/
+
+# Build
+build/
+*.app
+*.ipa
+*.dSYM
 
 # Dependencies
-.pub/
-pubspec.lock
-
-# Logs
-*.log
-
-# Environment
-.env
-.env.local
-*.env.*
-
-# IDE
-.vscode/
-.idea/
-*.swp
-*.swo
-
-# OS
-.DS_Store
-Thumbs.db
+Pods/
+Carthage/
 ```
