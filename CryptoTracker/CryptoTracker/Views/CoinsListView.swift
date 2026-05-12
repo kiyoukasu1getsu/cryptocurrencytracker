@@ -2,11 +2,14 @@
 //  CoinsListView.swift
 //  CryptoTracker
 //
-//  Экран списка криптовалют
+//  Created on 08.05.2024.
 //
 
 import SwiftUI
 
+// MARK: - Coins List View
+
+/// Displays a list of top cryptocurrencies
 struct CoinsListView: View {
     @StateObject private var viewModel = CoinsViewModel()
     @EnvironmentObject var portfolioManager: PortfolioManager
@@ -17,7 +20,7 @@ struct CoinsListView: View {
         NavigationView {
             Group {
                 if viewModel.isLoading && viewModel.coins.isEmpty {
-                    ProgressView("Загрузка...")
+                    ProgressView("Loading...")
                         .frame(maxWidth: .infinity, maxHeight: .infinity)
                 } else if let error = viewModel.errorMessage {
                     VStack(spacing: 16) {
@@ -27,7 +30,7 @@ struct CoinsListView: View {
                         Text(error)
                             .multilineTextAlignment(.center)
                             .padding()
-                        Button("Попробовать снова") {
+                        Button("Try Again") {
                             Task {
                                 await viewModel.fetchCoins()
                             }
@@ -52,7 +55,7 @@ struct CoinsListView: View {
                     }
                 }
             }
-            .navigationTitle("Криптовалюты")
+            .navigationTitle("Cryptocurrencies")
             .toolbar {
                 ToolbarItem(placement: .navigationBarTrailing) {
                     Button(action: {
@@ -79,6 +82,9 @@ struct CoinsListView: View {
     }
 }
 
+// MARK: - Coin Row View
+
+/// Displays a single cryptocurrency row in the list
 struct CoinRowView: View {
     let coin: Coin
     
@@ -119,6 +125,8 @@ struct CoinRowView: View {
         }
         .padding(.vertical, 4)
     }
+    
+    // MARK: - Helper Methods
     
     private func formatPrice(_ price: Double) -> String {
         if price >= 1 {

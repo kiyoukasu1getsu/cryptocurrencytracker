@@ -1,21 +1,32 @@
 ```
+# Build artifacts
+*.swiftmodule
+*.swiftdoc
+*.dSYM/
+
+# Dependencies
+Carthage/
+Pods/
+DerivedData/
+
 # Xcode
 *.xcodeproj/
 *.xcworkspace/
-*.pbxuser
-*.mode1v3
-*.perspectivev3
 *.xcuserstate
-*.xcuserdata
-DerivedData/
+project.xcworkspace/
+xcuserdata/
 
-# Build
-build/
-*.app
-*.ipa
-*.dSYM
+# Temporary files
+*.tmp
+*.log
+*.swp
 
-# Dependencies
-Pods/
-Carthage/
+# Environment
+.env
+.env.local
+*.env.*
+
+# OS generated files
+.DS_Store
+Thumbs.db
 ```

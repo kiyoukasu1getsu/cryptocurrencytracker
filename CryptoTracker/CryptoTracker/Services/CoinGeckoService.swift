@@ -2,18 +2,26 @@
 //  CoinGeckoService.swift
 //  CryptoTracker
 //
-//  Сервис для работы с CoinGecko API
+//  Created on 08.05.2024.
 //
 
 import Foundation
 
-class CoinGeckoService {
+// MARK: - CoinGecko API Service
+
+/// Service for interacting with CoinGecko API
+final class CoinGeckoService {
     static let shared = CoinGeckoService()
     
     private let baseURL = "https://api.coingecko.com/api/v3"
     
     private init() {}
     
+    // MARK: - Public Methods
+    
+    /// Fetches top cryptocurrencies by market cap
+    /// - Parameter limit: Number of coins to fetch (default: 50)
+    /// - Returns: Array of Coin objects
     func fetchTopCoins(limit: Int = 50) async throws -> [Coin] {
         let urlString = "\(baseURL)/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=\(limit)&page=1&sparkline=false"
         
@@ -28,14 +36,13 @@ class CoinGeckoService {
             throw URLError(.badServerResponse)
         }
         
-        do {
-            let coins = try JSONDecoder().decode([Coin].self, from: data)
-            return coins
-        } catch {
-            throw error
-        }
+        let coins = try JSONDecoder().decode([Coin].self, from: data)
+        return coins
     }
     
+    /// Fetches current price for a specific coin
+    /// - Parameter coinId: Coin identifier (e.g., "bitcoin")
+    /// - Returns: Current price in USD
     func fetchCoinPrice(coinId: String) async throws -> Double {
         let urlString = "\(baseURL)/simple/price?ids=\(coinId)&vs_currencies=usd"
         

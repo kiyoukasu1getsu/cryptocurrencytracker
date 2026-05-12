@@ -2,19 +2,23 @@
 //  PortfolioManager.swift
 //  CryptoTracker
 //
-//  Управление портфелем криптовалют
+//  Created on 08.05.2024.
 //
 
 import Foundation
 import SwiftUI
 
-class PortfolioManager: ObservableObject {
+// MARK: - Portfolio Manager
+
+/// Manages the user's cryptocurrency portfolio
+final class PortfolioManager: ObservableObject {
     static let shared = PortfolioManager()
     
     @Published var portfolioItems: [PortfolioItem] = []
     @Published var currentPrices: [String: Double] = [:]
     
     private let saveKey = "PortfolioItems"
+    private let priceUpdateInterval: TimeInterval = 60 // seconds
     
     private init() {
         loadPortfolio()
@@ -23,6 +27,9 @@ class PortfolioManager: ObservableObject {
         }
     }
     
+    // MARK: - Public Methods
+    
+    /// Adds a new coin to the portfolio
     func addItem(coin: Coin, amount: Double, buyPrice: Double) {
         let newItem = PortfolioItem(
             id: UUID(),
@@ -38,6 +45,7 @@ class PortfolioManager: ObservableObject {
         savePortfolio()
     }
     
+    /// Updates an existing portfolio item
     func updateItem(_ item: PortfolioItem) {
         if let index = portfolioItems.firstIndex(where: { $0.id == item.id }) {
             portfolioItems[index] = item
@@ -45,16 +53,20 @@ class PortfolioManager: ObservableObject {
         }
     }
     
+    /// Removes a specific item from the portfolio
     func deleteItem(_ item: PortfolioItem) {
         portfolioItems.removeAll { $0.id == item.id }
         savePortfolio()
     }
     
+    /// Removes items at specified offsets
     func deleteItems(at offsets: IndexSet) {
         portfolioItems.remove(atOffsets: offsets)
         savePortfolio()
     }
     
+    /// Calculates portfolio summary metrics
+    /// - Returns: Tuple with totalValue, investedAmount, profitLoss, profitLossPercentage
     func getPortfolioSummary() -> (totalValue: Double, investedAmount: Double, profitLoss: Double, profitLossPercentage: Double) {
         var totalValue = 0.0
         var investedAmount = 0.0
@@ -71,21 +83,25 @@ class PortfolioManager: ObservableObject {
         return (totalValue, investedAmount, profitLoss, profitLossPercentage)
     }
     
+    /// Gets current value of a portfolio item
     func getCurrentValue(for item: PortfolioItem) -> Double {
         let currentPrice = currentPrices[item.coinId] ?? item.buyPrice
         return item.amount * currentPrice
     }
     
+    /// Calculates profit/loss for a specific item
     func getProfitLoss(for item: PortfolioItem) -> Double {
         let currentValue = getCurrentValue(for: item)
         return currentValue - item.totalValue
     }
     
+    /// Calculates profit/loss percentage for a specific item
     func getProfitLossPercentage(for item: PortfolioItem) -> Double {
         let profitLoss = getProfitLoss(for: item)
         return item.totalValue > 0 ? (profitLoss / item.totalValue) * 100 : 0
     }
     
+    /// Updates current prices for all coins in the portfolio
     func updateCurrentPrices() async {
         guard !portfolioItems.isEmpty else { return }
         
@@ -110,6 +126,8 @@ class PortfolioManager: ObservableObject {
             print("Error updating prices: \(error)")
         }
     }
+    
+    // MARK: - Private Methods
     
     private func savePortfolio() {
         if let encoded = try? JSONEncoder().encode(portfolioItems) {
