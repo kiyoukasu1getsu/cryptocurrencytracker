@@ -2,11 +2,14 @@
 //  EditPortfolioItemView.swift
 //  CryptoTracker
 //
-//  Экран редактирования позиции в портфеле
+//  Created on 08.05.2024.
 //
 
 import SwiftUI
 
+// MARK: - Edit Portfolio Item View
+
+/// View for editing a portfolio item
 struct EditPortfolioItemView: View {
     let item: PortfolioItem
     @Binding var isPresented: Bool
@@ -25,7 +28,7 @@ struct EditPortfolioItemView: View {
     var body: some View {
         NavigationView {
             Form {
-                Section(header: Text("Монета")) {
+                Section(header: Text("Coin")) {
                     HStack {
                         Text(item.name)
                             .font(.headline)
@@ -35,18 +38,18 @@ struct EditPortfolioItemView: View {
                     }
                     
                     HStack {
-                        Text("Дата добавления:")
+                        Text("Date Added:")
                         Spacer()
                         Text(formatDate(item.dateAdded))
                             .foregroundColor(.secondary)
                     }
                 }
                 
-                Section(header: Text("Изменить данные")) {
-                    TextField("Количество", text: $amount)
+                Section(header: Text("Edit Details")) {
+                    TextField("Amount", text: $amount)
                         .keyboardType(.decimalPad)
                     
-                    TextField("Цена покупки за 1 монету ($)", text: $buyPrice)
+                    TextField("Buy Price per Coin ($)", text: $buyPrice)
                         .keyboardType(.decimalPad)
                     
                     if !amount.isEmpty && !buyPrice.isEmpty,
@@ -54,7 +57,7 @@ struct EditPortfolioItemView: View {
                        let priceValue = Double(buyPrice),
                        amountValue > 0, priceValue > 0 {
                         HStack {
-                            Text("Общая стоимость:")
+                            Text("Total Cost:")
                             Spacer()
                             Text(formatPrice(amountValue * priceValue))
                                 .fontWeight(.semibold)
@@ -64,7 +67,7 @@ struct EditPortfolioItemView: View {
                         let newProfitLoss = (amountValue * currentValue) - (amountValue * priceValue)
                         
                         HStack {
-                            Text("Прибыль/Убыток:")
+                            Text("Profit/Loss:")
                             Spacer()
                             Text(formatPrice(newProfitLoss))
                                 .fontWeight(.semibold)
@@ -73,16 +76,16 @@ struct EditPortfolioItemView: View {
                     }
                 }
             }
-            .navigationTitle("Редактировать")
+            .navigationTitle("Edit")
             .toolbar {
                 ToolbarItem(placement: .navigationBarLeading) {
-                    Button("Отмена") {
+                    Button("Cancel") {
                         isPresented = false
                     }
                 }
                 
                 ToolbarItem(placement: .navigationBarTrailing) {
-                    Button("Сохранить") {
+                    Button("Save") {
                         saveChanges()
                     }
                     .disabled(!isValidInput)
@@ -92,7 +95,7 @@ struct EditPortfolioItemView: View {
                     Button(role: .destructive) {
                         deleteItem()
                     } label: {
-                        Label("Удалить позицию", systemImage: "trash")
+                        Label("Delete Position", systemImage: "trash")
                             .frame(maxWidth: .infinity)
                     }
                     .buttonStyle(.borderedProminent)
@@ -101,11 +104,15 @@ struct EditPortfolioItemView: View {
         }
     }
     
+    // MARK: - Private Properties
+    
     private var isValidInput: Bool {
         guard !amount.isEmpty, !buyPrice.isEmpty else { return false }
         guard let amountValue = Double(amount), let priceValue = Double(buyPrice) else { return false }
         return amountValue > 0 && priceValue > 0
     }
+    
+    // MARK: - Private Methods
     
     private func saveChanges() {
         guard let amountValue = Double(amount),

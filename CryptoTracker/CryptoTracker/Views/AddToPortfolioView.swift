@@ -2,11 +2,14 @@
 //  AddToPortfolioView.swift
 //  CryptoTracker
 //
-//  Экран добавления монеты в портфель
+//  Created on 08.05.2024.
 //
 
 import SwiftUI
 
+// MARK: - Add to Portfolio View
+
+/// View for adding a cryptocurrency to the portfolio
 struct AddToPortfolioView: View {
     let coin: Coin
     @Binding var isPresented: Bool
@@ -18,7 +21,7 @@ struct AddToPortfolioView: View {
     var body: some View {
         NavigationView {
             Form {
-                Section(header: Text("Информация о монете")) {
+                Section(header: Text("Coin Information")) {
                     HStack {
                         AsyncImage(url: URL(string: coin.image)) { image in
                             image
@@ -41,18 +44,18 @@ struct AddToPortfolioView: View {
                     }
                     
                     HStack {
-                        Text("Текущая цена:")
+                        Text("Current Price:")
                         Spacer()
                         Text(formatPrice(coin.currentPrice))
                             .fontWeight(.semibold)
                     }
                 }
                 
-                Section(header: Text("Данные покупки")) {
-                    TextField("Количество", text: $amount)
+                Section(header: Text("Purchase Details")) {
+                    TextField("Amount", text: $amount)
                         .keyboardType(.decimalPad)
                     
-                    TextField("Цена покупки за 1 монету ($)", text: $buyPrice)
+                    TextField("Buy Price per Coin ($)", text: $buyPrice)
                         .keyboardType(.decimalPad)
                     
                     if !amount.isEmpty && !buyPrice.isEmpty,
@@ -60,7 +63,7 @@ struct AddToPortfolioView: View {
                        let priceValue = Double(buyPrice),
                        amountValue > 0, priceValue > 0 {
                         HStack {
-                            Text("Общая стоимость:")
+                            Text("Total Cost:")
                             Spacer()
                             Text(formatPrice(amountValue * priceValue))
                                 .fontWeight(.semibold)
@@ -69,21 +72,21 @@ struct AddToPortfolioView: View {
                 }
                 
                 Section {
-                    Text("Совет: Укажите реальную цену покупки, чтобы точно отслеживать прибыль или убыток.")
+                    Text("Tip: Enter the actual purchase price to accurately track profit or loss.")
                         .font(.caption)
                         .foregroundColor(.secondary)
                 }
             }
-            .navigationTitle("Добавить в портфель")
+            .navigationTitle("Add to Portfolio")
             .toolbar {
                 ToolbarItem(placement: .navigationBarLeading) {
-                    Button("Отмена") {
+                    Button("Cancel") {
                         isPresented = false
                     }
                 }
                 
                 ToolbarItem(placement: .navigationBarTrailing) {
-                    Button("Добавить") {
+                    Button("Add") {
                         addCoin()
                     }
                     .disabled(!isValidInput)
@@ -92,11 +95,15 @@ struct AddToPortfolioView: View {
         }
     }
     
+    // MARK: - Private Properties
+    
     private var isValidInput: Bool {
         guard !amount.isEmpty, !buyPrice.isEmpty else { return false }
         guard let amountValue = Double(amount), let priceValue = Double(buyPrice) else { return false }
         return amountValue > 0 && priceValue > 0
     }
+    
+    // MARK: - Private Methods
     
     private func addCoin() {
         guard let amountValue = Double(amount),
@@ -119,6 +126,16 @@ struct AddToPortfolioView: View {
 }
 
 #Preview {
-    AddToPortfolioView(coin: Coin(id: "bitcoin", symbol: "btc", name: "Bitcoin", currentPrice: 45000.0, priceChangePercentage24h: 2.5, image: "https://assets.coingecko.com/coins/images/1/small/bitcoin.png"), isPresented: .constant(true))
-        .environmentObject(PortfolioManager.shared)
+    AddToPortfolioView(
+        coin: Coin(
+            id: "bitcoin",
+            symbol: "btc",
+            name: "Bitcoin",
+            currentPrice: 45000.0,
+            priceChangePercentage24h: 2.5,
+            image: "https://assets.coingecko.com/coins/images/1/small/bitcoin.png"
+        ),
+        isPresented: .constant(true)
+    )
+    .environmentObject(PortfolioManager.shared)
 }

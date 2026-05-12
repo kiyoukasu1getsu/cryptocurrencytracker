@@ -2,11 +2,14 @@
 //  PortfolioView.swift
 //  CryptoTracker
 //
-//  Экран портфеля криптовалют
+//  Created on 08.05.2024.
 //
 
 import SwiftUI
 
+// MARK: - Portfolio View
+
+/// Displays the user's cryptocurrency portfolio with summary statistics
 struct PortfolioView: View {
     @EnvironmentObject var portfolioManager: PortfolioManager
     @State private var showingEditSheet = false
@@ -20,10 +23,10 @@ struct PortfolioView: View {
                         Image(systemName: "briefcase")
                             .font(.system(size: 60))
                             .foregroundColor(.gray)
-                        Text("Ваш портфель пуст")
+                        Text("Your portfolio is empty")
                             .font(.title2)
                             .foregroundColor(.secondary)
-                        Text("Добавьте криптовалюты из первого раздела, чтобы начать отслеживать свой портфель")
+                        Text("Add cryptocurrencies from the first section to start tracking your portfolio")
                             .multilineTextAlignment(.center)
                             .foregroundColor(.secondary)
                             .padding(.horizontal)
@@ -38,7 +41,7 @@ struct PortfolioView: View {
                                         Button(role: .destructive) {
                                             portfolioManager.deleteItem(item)
                                         } label: {
-                                            Label("Удалить", systemImage: "trash")
+                                            Label("Delete", systemImage: "trash")
                                         }
                                     }
                                     .onTapGesture {
@@ -51,7 +54,7 @@ struct PortfolioView: View {
                     }
                 }
             }
-            .navigationTitle("Портфель")
+            .navigationTitle("Portfolio")
             .toolbar {
                 ToolbarItem(placement: .navigationBarTrailing) {
                     Button(action: {
@@ -74,13 +77,15 @@ struct PortfolioView: View {
         }
     }
     
+    // MARK: - Private Views
+    
     private var portfolioSummaryHeader: some View {
         let summary = portfolioManager.getPortfolioSummary()
         
         return Group {
             HStack {
                 VStack(alignment: .leading, spacing: 8) {
-                    Text("Общая стоимость")
+                    Text("Total Value")
                         .font(.caption)
                         .foregroundColor(.secondary)
                     Text(formatPrice(summary.totalValue))
@@ -89,7 +94,7 @@ struct PortfolioView: View {
                     
                     HStack(spacing: 16) {
                         VStack(alignment: .leading) {
-                            Text("Вложено")
+                            Text("Invested")
                                 .font(.caption)
                                 .foregroundColor(.secondary)
                             Text(formatPrice(summary.investedAmount))
@@ -99,7 +104,7 @@ struct PortfolioView: View {
                         Spacer()
                         
                         VStack(alignment: .trailing) {
-                            Text("Прибыль/Убыток")
+                            Text("Profit/Loss")
                                 .font(.caption)
                                 .foregroundColor(.secondary)
                             HStack {
@@ -123,6 +128,9 @@ struct PortfolioView: View {
     }
 }
 
+// MARK: - Portfolio Item Row
+
+/// Displays a single portfolio item row
 struct PortfolioItemRow: View {
     let item: PortfolioItem
     @EnvironmentObject var portfolioManager: PortfolioManager

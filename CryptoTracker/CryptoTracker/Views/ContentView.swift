@@ -2,11 +2,14 @@
 //  ContentView.swift
 //  CryptoTracker
 //
-//  Главный экран с навигацией
+//  Created on 08.05.2024.
 //
 
 import SwiftUI
 
+// MARK: - Content View
+
+/// Main app view with tab navigation
 struct ContentView: View {
     @State private var selectedTab = 0
     
@@ -14,13 +17,13 @@ struct ContentView: View {
         TabView(selection: $selectedTab) {
             CoinsListView()
                 .tabItem {
-                    Label("Криптовалюты", systemImage: "list.bullet")
+                    Label("Cryptocurrencies", systemImage: "list.bullet")
                 }
                 .tag(0)
             
             PortfolioView()
                 .tabItem {
-                    Label("Портфель", systemImage: "briefcase.fill")
+                    Label("Portfolio", systemImage: "briefcase.fill")
                 }
                 .tag(1)
         }

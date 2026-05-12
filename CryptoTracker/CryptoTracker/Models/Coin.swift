@@ -2,11 +2,14 @@
 //  Coin.swift
 //  CryptoTracker
 //
-//  Модель криптовалюты
+//  Created on 08.05.2024.
 //
 
 import Foundation
 
+// MARK: - Coin Model
+
+/// Represents a cryptocurrency with its market data
 struct Coin: Codable, Identifiable {
     let id: String
     let symbol: String
@@ -25,6 +28,9 @@ struct Coin: Codable, Identifiable {
     }
 }
 
+// MARK: - Portfolio Item Model
+
+/// Represents a cryptocurrency holding in the user's portfolio
 struct PortfolioItem: Codable, Identifiable {
     let id: UUID
     var coinId: String
@@ -34,6 +40,7 @@ struct PortfolioItem: Codable, Identifiable {
     var buyPrice: Double
     var dateAdded: Date
     
+    /// Total value at purchase (amount * buyPrice)
     var totalValue: Double {
         return amount * buyPrice
     }
